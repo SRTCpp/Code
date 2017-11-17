@@ -1,0 +1,50 @@
+m			meter						length			1.0
+cm			centimeter				length			1e-2
+mm			millimeter				length			1e-3
+um			micron					length			1e-6
+nm			nanometer				length			1e-9
+A			Angstrom					length			1e-10
+km			kilometer				length			1e3
+AU			Astronomical_Unit		length			1.496e11
+in			inches					length			2.54e-2
+ft			feet						length			.3048
+R_Jup		Jupiter_radius			length			7.1492e7
+R_Sun		solar_radius			length			6.9585e8
+s			second					time				1.0
+min		minute					time				60.0
+hr			hour						time				3600.
+day		day						time				8.64e4
+yr			year						time				3.1558464e7
+Gyr		gigayear					time				3.1558464e16
+g			gram						mass				1.0
+kg			kilogram					mass				1e3
+M_Moon	Lunar_mass				mass				.07349e27
+M_Earth	Earth_mass				mass				5.9736e27
+M_Jup		Jupter_mass				mass				1.8986e30
+M_Sun		solar_mass				mass				1.9891e33
+slug		slug						mass				14.5939029372064
+amu		atomic_mass_unit		mass				1.65979e-24
+K			Kelvin					temperature		1.0
+C			centigrade				temperature		1.0
+F			Fahrenheit				temperature		.44444
+coulomb	coulomb					charge			1.0
+esu		electrostatic_unit	charge			300.
+deg		degree					angle				1.7453e-2
+rad		radian					angle				1.0
+l			liter						conglomerate	1e3 cm^3
+ft-lb		foot-pound				conglomerate	ft	lb
+acre		acre						conglomerate	4046.8564 m^2
+gal		gallon					conglomerate	231 in^3
+N			newton					conglomerate	kg m s^-2
+lb			pound						conglomerate	ft s^-2 slug
+dyne		dyne						conglomerate	g cm s^-2
+erg		erg						conglomerate	dyne cm
+J			joule						conglomerate	N m
+cal		calorie					conglomerate	4.18 J
+Btu		British_thermal_unit	conglomerate	1054.35 J
+W			watt						conglomerate	J s^-1
+L_Sun		solar_luminosity		conglomerate	3.86e26 W
+mks		meters_kilograms_sec	system			m kg s
+SI			system_international	system			m kg s
+cgs		cmeters_grams_second	system			cm g s	
+fps		foot_pound_second		system			ft lb s

@@ -1,0 +1,85 @@
+------------------------------------------------------------------------
+r2101 | jbarnes | 2017-07-03 13:28:05 -0700 (Mon, 03 Jul 2017) | 3 lines
+
+not too bad
+
+
+
+Index: photons.h
+===================================================================
+--- photons.h	(revision 2100)
++++ photons.h	(revision 2101)
+@@ -15,8 +15,9 @@
+ 	private:
+ 		geomvector _photposition;
+ 		geomvector _photdirection;
++		double _photaltitude_km; //smack 2017.june.8.;
++		double _amplitude;
+ 		double _lambda_um;
+-		double _amplitude;
+ 		unsigned int atmoscatterers,surfscatterers; //number of scattering events off atmo,surf for each photon
+ 		atmozone* _scattering_zone;
+ 		
+
+------------------------------------------------------------------------
+r2074 | jbarnes | 2016-12-13 17:00:17 -0800 (Tue, 13 Dec 2016) | 3 lines
+
+Shannon's late 2016 mods
+
+
+
+Index: photons.h
+===================================================================
+--- photons.h	(revision 2073)
++++ photons.h	(revision 2074)
+@@ -19,7 +19,10 @@
+ 		double _amplitude;
+ 		unsigned int atmoscatterers,surfscatterers; //number of scattering events off atmo,surf for each photon
+ 		atmozone* _scattering_zone;
+-	
++		
++		pair<double, double> _ranthetaphi; //for testing groundlamp
++		geomvector _randirection; //for testing groundlamp
++			
+ 	public:
+ 		/*Constructors and Annihilators*/
+ 			//photon(geomvector (for xyz position), geomvector (for direction), amplitude, lambda)
+@@ -36,6 +39,8 @@
+ 			if (_scattering_zone==0) 
+ 				cout << "oh crap pointer to a scattering zone not set in photon.  Segfault imminent\n";
+ 			return _scattering_zone;}
++		pair<double, double> ranthetaphi(){return _ranthetaphi;}
++		geomvector randirection(){return _randirection;}	
+ 			
+ 		/*Setters*/
+ 		void amplitude(double A){_amplitude= A ;} //function to get amplitude (private)
+@@ -43,6 +48,8 @@
+ 		void position(geomvector g){_photposition=g;}
+ 		void direction(geomvector g){_photdirection=g;}
+ 		void set_scattering_zone(atmozone* z){_scattering_zone=z;}
++		void ranthetaphi(double, double );
++		void randirection(geomvector g){_randirection=g;}
+ 				
+ 		/*Member Functions*/
+ 		void setrandtau();
+@@ -56,12 +63,6 @@
+ 	
+ };
+ 
+-/*class detector
+-{
+-	/*virtual CCD for which we calculate how many photons contribute
+-	with the end result of a simulated image */	
+-	//telescope "cone of acceptance"
+-	//num of pixels, dimension, etc?};*/
+ 
+ 
+ #endif
+
+------------------------------------------------------------------------
+r2051 | jbarnes | 2016-08-17 15:30:15 -0700 (Wed, 17 Aug 2016) | 3 lines
+
+absorption still half-assed, but elephant detectors now working.  (?)
+
+
+
