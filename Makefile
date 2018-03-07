@@ -1,65 +1,82 @@
+PROGRAM = $@
 JDIR=~/working/c++/Jcube
 NR = ~/working/nr/
-JCUBEO = Jcube.o Jio.o Joperators.o Jmanip.o Jfunc.o Jmisc.o JIM.o Jnr.o Junit.o \
-Jprocessors.o Jfits.o Jdate.o Jdraw.o Jalgorithms.o Jaddons.o Jassociated.o Jprojections.o Jangle.o
-LIBS = -lm -lnr -lsqlplus -lCCfits -lcfitsio -lQt3Support -lQtSql -lQtXml -lQtNetwork -lQtGui -lQtCore -lgdal
+BINDIR = ~/bin
+LIBS =  -lcspice -lcsupport -lm -lboost_program_options -lcommandl \
+ -lcfitsio -lnr -lgdal\
+ -lc++ -lJcube `Magick++-config --ldflags --libs` 
 RM = /bin/rm -f
 CCver = 49
-CC = g++${CCver} -fopenmp -std=c++11 -Wno-deprecated -g  ${INCLS} `Magick++-config --cxxflags --cppflags`
-INCLS= -I /usr/local/include/mysql -I /usr/local/include -I/usr/local/share/qt/mkspecs/freebsd-g++ -I/usr/local/include/qt4/QtCore -I/usr/local/include/qt4/QtGui -I/usr/local/include/qt4/Qt3Support -I/usr/local/include/qt4
+CC = g++${CCver} -std=c++11 -fopenmp -g -I /usr/local/include -Wno-deprecated `Magick++-config --cxxflags --cppflags` 
 LIBLOC=~/lib
-LFLAGS=-Wl,-rpath,/usr/local/lib/gcc${CCver}
-LIBDIRS= -L /usr/local/lib/gcc${CCver} -L/usr/local/lib -L/usr/X11R6/lib -L/usr/local/lib/mysql -L ${LIBLOC} -L/usr/local/lib/qt4
+LFLAGS= -Wl,-rpath,/usr/local/lib/gcc${CCver} -pthread
+SPICELOC=/usr/local
+TOPOSPICELOC=~/working/c++/Jcube/titantopo/spice
+TOPOLOC=~/working/c++/Jcube/titantopo
+RADTRANO= SRTC++.o photons.o atmolayers.o atmospheres.o geomvector.o \
+   photongenerators.o \
+   phasefunctions.o atmozones.o photontraverse.o detectors.o 
+RADTRANH= SRTC++.h photons.h atmolayers.h atmospheres.h geomvector.h \
+   photongenerators.h \
+   phasefunctions.h atmozones.h photontraverse.h detectors.h \
+	test_GrahamCompare.h SRTC++_testsuite.h
+TESTSUITEO= test_LambertSurface.o test_ChandraAtmo.o \
+  chandra_test.o test_SebastienCompare.o \
+  test_GrahamCompare.o test_DiffusiveReflectance.o diffusive_reflectance.o 
+BENCHO= 
+TESTSUITEH= STRC++_testsuite.h chandra_test.h  
+LIBDIRS= ${LFLAGS} -L ~/lib -L/usr/local/lib/gcc${CCver} -L/usr/local/lib  \
+ -L/usr/local/lib/mysql -L ${LIBLOC} -L/usr/lib
 
 .SUFFIXES  : .c++ .o
 .c++.o:
 	${CC} -c $<
-
-
-
-all:	nr_lib ${LIBLOC}/libJcube.a
+%.d: %.c++
+	$(CC) -MM -MD $<
+							 
+include $(RADTRANO:.o=.d)
+include $(TESTSUITEO:.o=.d)
 
 clean:
-	${RM} *core *.o
+	${RM} *.o *core ${PROGRAM}*.o
 
-nr_lib:
-	cd ${NR} ; gmake
+#${PROGRAM}.o: $(PROGRAM).c++ ${JDIR}/Jcube.h ${JDIR}/Junit.h \
+ ${JDIR}/Jvalue.h ${JDIR}/Jdiffeq.h ${JDIR}/Jdiffeq.h Jcube_lib \
+ ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANH) $(RADTRANO) $@.d
+#	$(CC) -c $(PROGRAM).c++ -o ${PROGRAM}.o
 
-Jprocessors.o:	Jprocessors.c++ Jcube.h
+#$@: ${PROGRAM}.o Jcube_lib ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO)
+#	$(CC) $< ../JIM.o $(RADTRANO) $(TESTSUITEO) \
+	$(LIBDIRS) -o $(BINDIR)/${PROGRAM} \
+ 	$(LIBS) ${LIBS}
 
-Junit.o:	  		Junit.c++ Junit.h
+diskintegrate: diskintegrate.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO)
+	$(CC) $< ../JIM.o $(RADTRANO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
+	
+SRTC++test: SRTC++test.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO)
+	$(CC) $< ../JIM.o $(RADTRANO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
+		
+SRTC++_testsuite: SRTC++_testsuite.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO) $(TESTSUITEO) 
+	$(CC) $< ../JIM.o $(RADTRANO) $(TESTSUITEO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
+		
+SRTC++_benchmark: SRTC++_benchmark.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO) $(BENCHO) 
+	$(CC) $< ../JIM.o $(RADTRANO) $(BENCHO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
+		
+syntheticimageintegrate: syntheticimageintegrate.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO)
+	$(CC) $< ../JIM.o $(RADTRANO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
 
-Jnr.o:         Jnr.c++ Jnr.h Jcube.h
-
-JIM.o:         JIM.c++ Jcube.h
-
-Jfunc.o:       Jfunc.c++ Jcube.h Jangle.h
-
-Jio.o:         Jio.c++ Jcube.h
-
-Joperators.o:  Joperators.c++ Jcube.h
-
-Jmanip.o:		Jmanip.c++ Jcube.h
-
-Jmisc.o:			Jmisc.c++ Jcube.h
-
-Jcube.o:			Jcube.c++ Jcube.h
-
-Jfits.o:			Jfits.c++ Jcube.h
-
-Jdate.o:			Jdate.c++ Jdate.h
-
-Jdraw.o:			Jdraw.c++ Jcube.h
-
-Jaddons.o:			Jaddons.c++ Jcube.h Jaddons.h
-
-Jalgorithms.o:			Jalgorithms.c++ Jcube.h
-
-Jassociated.o:			Jassociated.c++ Jcube.h Jassociated.h
-
-Jprojections.o:		Jprojections.c++ Jcube.h Jprojections.h 
-
-Jangle.o:		Jangle.c++ Jangle.h 
-
-${LIBLOC}/libJcube.a:		${JCUBEO}
-	ar r ${LIBLOC}/libJcube.a ${JCUBEO}
+emission_phase_function: emission_phase_function.o ${LIBLOC}/libJcube.a ${LIBLOC}/libnr.a $(RADTRANO) $(TESTSUITEO) 
+	$(CC) $< ../JIM.o $(RADTRANO) \
+	$(LIBDIRS) -o $(BINDIR)/$@ \
+ 	$(LIBS) ${LIBS}
+		
