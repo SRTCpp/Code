@@ -1,0 +1,63 @@
+NR = ../../nr/
+JCUBEO = Jcube.o JIM.o Jio.o Joperators.o Jmanip.o Jfunc.o Jmisc.o Jnr.o Junit.o \
+Jprocessors.o Jfits.o Jdate.o Jdraw.o Jalgorithms.o Jaddons.o Jassociated.o Jprojections.o Jangle.o
+LIBS = -lm -lnr -lsqlplus -lcspice -lCCfits -lQt3Support -lQtSql -lQtXml -lQtNetwork -lQtGui -lQtCore -lgdal -lcfitsio
+RM = /bin/rm -f
+CC = g++ -fopenmp -std=c++11 -Wno-deprecated -g  ${INCLS} `Magick++-config --cxxflags --cppflags`
+INCLS= -I /include/mysql -I /usr/include -I/include -I/share/qt/mkspecs/freebsd-g++ -I/include/qt4/QtCore -I/include/qt4/QtGui -I/include/qt4/Qt3Support -I/include/qt4
+LIBLOC=~/lib
+LFLAGS=-Wl,-rpath,/usr/local/lib/gcc
+LIBDIRS= -L /usr/local/lib/gcc -L/usr/local/lib -L/usr/X11R6/lib -L/usr/local/lib/mysql -L ${LIBLOC} -L/usr/local/lib/qt4 -L/usr/ -L/usr/include/gdal
+
+.SUFFIXES  : .c++ .o
+.c++.o:
+	${CC} -c $<
+
+
+
+all:	nr_lib ${LIBLOC}/libJcube.a
+
+clean:
+	${RM} *core *.o
+
+nr_lib:
+	cd ${NR} ; make
+
+Jprocessors.o:	Jprocessors.c++ Jcube.h
+
+Junit.o:	  		Junit.c++ Junit.h
+
+Jnr.o:         Jnr.c++ Jnr.h Jcube.h
+
+JIM.o:         JIM.c++ Jcube.h
+
+Jfunc.o:       Jfunc.c++ Jcube.h Jangle.h
+
+Jio.o:         Jio.c++ Jcube.h
+
+Joperators.o:  Joperators.c++ Jcube.h
+
+Jmanip.o:		Jmanip.c++ Jcube.h
+
+Jmisc.o:			Jmisc.c++ Jcube.h
+
+Jcube.o:			Jcube.c++ Jcube.h
+
+Jfits.o:			Jfits.c++ Jcube.h
+
+Jdate.o:			Jdate.c++ Jdate.h
+
+Jdraw.o:			Jdraw.c++ Jcube.h
+
+Jaddons.o:			Jaddons.c++ Jcube.h Jaddons.h
+
+Jalgorithms.o:			Jalgorithms.c++ Jcube.h
+
+Jassociated.o:			Jassociated.c++ Jcube.h Jassociated.h
+
+Jprojections.o:		Jprojections.c++ Jcube.h Jprojections.h 
+
+Jangle.o:		Jangle.c++ Jangle.h 
+
+${LIBLOC}/libJcube.a:		${JCUBEO}
+	ar r ${LIBLOC}/libJcube.a ${JCUBEO}
