@@ -1,0 +1,17 @@
+SRTC++ (Barnes et al. 2018, Astronomical Journal) was designed on computer
+systems running the FreeBSD operating system.  While I'm certain that it's
+possible to get it to run on other architectures, like Linux, I don't know how
+to do that.  But here are some hints based on our experience.
+
+SRTC++ relies on the following dependencies:  Numerical Recipes, sqlplus,
+cspice, cfitsio, QT3, gdal, ImageMagick++, openmp, c++ Boost
+
+Numerical Recipes is not open-source software.  Due to licensing constraints,
+please purchase access to NR at http://nr.com/ ($65 as of 2018 April).  Then
+contact the author at jwbarnes@uidaho.edu or jason@barnesos.net and I will send
+you copies of all NR dependencies and altered NR code for Jcube.
+
+Johnathon Ahlers provided copies of Ubuntu Makefiles for both Jcube and a
+program that depends on Jcube.  Those are included in the distribution as
+"Makefile.Ubuntu" -- they are very unlikely to work without alteration, but
+might serve as a useful starting point for different system architectures.
